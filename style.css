@@ -1,0 +1,481 @@
+/* =========================================
+   ベーススタイル (Base)
+========================================== */
+/* リセットCSS: ブラウザ間の余白の違いなどをなくす */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* スムーススクロール */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 基本の文字設定（ゴシック体） */
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #333;
+    line-height: 1.8;
+    background-color: #fdfdfd;
+}
+
+/* 明朝体のクラス */
+.serif {
+    font-family: 'Noto Serif JP', serif;
+}
+
+/* 共通の横幅（最大1080px）と中央揃え */
+.container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* リンク */
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s;
+}
+
+/* =========================================
+   PART 1
+========================================== */
+.part-1 {
+    background-color: #fff;
+    padding-bottom: 100px;
+}
+
+/* ヘッダー */
+header {
+    background-color: #f6c085; /* オレンジ色 */
+    color: #fff;
+    position: fixed; /* 上部に固定 */
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
+
+.logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.logo a {
+    color: inherit; /* 親要素（logo）の色を引き継ぐ */
+    text-decoration: none; /* 下線を消す */
+}
+
+.g-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.g-nav a {
+    font-weight: 700;
+    color: #333; /* 文字は暗く */
+}
+
+.g-nav a:hover {
+    color: #fff; /* ホバーで白に */
+}
+/* =========================================
+   トップスライドショー（CSSアニメーション）
+   ========================================= */
+/* コンセプト */
+.top {
+    padding-top: 180px; /* ヘッダー固定分の余白 */
+    padding-bottom: 100px;
+}
+
+   .top-slider {
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+    position: relative;
+    background-color: #000;
+}
+
+.slider-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    /* 5枚×5秒で、合計25秒のループに設定 */
+    animation: fadeAnime 25s infinite;
+}
+
+/* スライド上のテキストエリア */
+.slide-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 真ん中に配置 */
+    color: #fff; /* 文字色を白に */
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* 文字に影をつけて見やすく */
+    width: 80%;
+}
+
+.slide-text h2 {
+    font-size: 3rem; /* 文字の大きさ（スマホで自動調整されます） */
+    line-height: 1.4;
+}
+
+/* 各スライドの表示タイミングを5秒ずつずらす */
+.img-slide-1 { background-image: url("img/shop.png"); animation-delay: 0s; }
+.img-slide-2 { background-image: url("img/dripping.png"); animation-delay: 5s; }
+.img-slide-3 { background-image: url("img/drinking.png"); animation-delay: 10s; }
+.img-slide-4 { background-image: url("img/coffee.png"); animation-delay: 15s; }
+.img-slide-5 { background-image: url("img/napolitan.png"); animation-delay: 20s; }
+
+/* 25秒間のループの中で、5秒（20%）ずつ担当する設定 */
+@keyframes fadeAnime {
+    0%   { opacity: 0; }
+    4%   { opacity: 1; }  /* 1秒かけてふわっと出る (25秒の4% = 1秒) */
+    20%  { opacity: 1; }  /* 5秒間はしっかり表示をキープ */
+    24%  { opacity: 0; }  /* 1秒かけてふわっと消える */
+    100% { opacity: 0; }  /* 残りの時間は隠れて順番を待つ */
+}
+
+/* =========================================
+   レスポンシブ対応（スマホ用の微調整）
+   ========================================= */
+@media (max-width: 768px) {
+    .top-slider {
+        height: 60vh; /* スマホでは少し高さを低くする */
+    }
+    .slide-text h2 {
+        font-size: 2rem; /* 文字を少し小さく */
+    }
+}
+/* コンセプト */
+.concept {
+    padding-top: 180px; /* ヘッダー固定分の余白 */
+    padding-bottom: 100px;
+}
+
+.concept-flex {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+}
+
+.concept-visual, .concept-text {
+    flex: 1;
+}
+
+/* オーナー写真をCSSで円形に */
+.owner-photo {
+    width: 400px;
+    height: 480px;
+    /* ↓ ここを実際の画像ファイル名に変える */
+    background-image: url("img/master.png"); 
+    background-size: cover;
+    background-position: center;
+    border-radius: 200px 200px 0 0;
+    margin: 0 auto;
+}
+
+.main-copy {
+    font-size: 2.6rem;
+    line-height: 1.4;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.main-copy span {
+    color: #e67e22; /* こだわり部分 */
+}
+
+.description-text p {
+    margin-bottom: 15px;
+}
+
+.catchphrase {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-top: 40px;
+    color: #555;
+}
+
+/* ドリンクメニュー */
+.drink {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.menu-sub-title {
+    color: #e67e22;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.menu-title {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 60px;
+    color: #8e44ad;
+}
+
+.menu-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.menu-item {
+    flex: 1;
+    background: #fff;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.item-img {
+    width: 100%;
+    height: 200px;
+    background-color: #eee;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* オリジナルブレンド */
+.img-drink-1 {
+    background-image: url("img/coffee.png");
+    background-size: cover;
+    background-position: center;
+}
+
+/* ドラフトコーヒー */
+.img-drink-2 {
+    background-image: url("img/draft.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+/* アイスコーヒー */
+.img-drink-3 {
+    background-image: url("img/ice.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.item-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.price {
+    color: #e67e22;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* =========================================
+   PART 2
+========================================== */
+.bg-light-gray {
+    background-color: #f9f9f9;
+}
+
+.food {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+/* フードの行（横並び） */
+.food-row {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 80px;
+}
+
+/* 左右反転のクラス */
+.food-row.reverse {
+    flex-direction: row-reverse;
+}
+
+.food-visual, .food-text {
+    flex: 1;
+}
+
+.food-img {
+    width: 100%;
+    height: 320px;
+    background-color: #eee;
+    border-radius: 10px;
+}
+
+/* ナポリタン */
+.img-food-1 {
+    background-image: url("img/napolitan.png");
+    background-size: cover;
+    background-position: center;
+}
+
+/* ショートケーキ */
+.img-food-2 {
+    background-image: url("img/cake.png");
+    background-size: cover;
+    background-position: center;
+}
+
+.food-text h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.price-large {
+    font-size: 1.8rem;
+    color: #e67e22;
+    font-weight: 700;
+    margin-top: 20px;
+}
+
+/* =========================================
+   PART 3
+========================================== */
+.bg-dark {
+    background-color: #1a1a1a;
+    color: #eee;
+}
+
+.access {
+    padding-top: 100px;
+    padding-bottom: 80px;
+}
+
+.access-flex {
+    display: flex;
+    gap: 60px;
+}
+
+.map-area, .info-area {
+    flex: 1;
+}
+
+/* Googleマップを親要素（map-area）の幅いっぱいに広げる */
+.map-area iframe {
+    width: 100%;
+    height: 400px; /* 高さをカンプに合わせて調整 */
+    border-radius: 10px; /* 角を少し丸くするとデザインに馴染みます */
+}
+
+.access-sub {
+    color: #f6c085;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.access-title {
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+}
+
+.info-list {
+    display: grid;
+    gap: 20px;
+}
+
+.info-item dt {
+    font-weight: 700;
+    color: #f6c085; /* ラベルの色 */
+}
+
+/* 駐車場（黄色い枠） */
+.parking-info {
+    border: 2px solid #f1c40f;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(241, 196, 15, 0.1);
+}
+
+.parking-info h4 {
+    color: #f1c40f;
+    margin-bottom: 10px;
+}
+
+/* フッター */
+.footer {
+    border-top: 1px solid #333;
+    padding-top: 60px;
+    padding-bottom: 20px;
+}
+
+.footer-upper {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    margin-bottom: 60px;
+}
+
+.footer-logo-area {
+    flex: 1.5;
+}
+
+.footer-desc {
+    font-size: 0.9rem;
+    color: #bbb;
+    margin-top: 15px;
+}
+
+.footer-links {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 60px;
+}
+
+.link-group h4 {
+    margin-bottom: 15px;
+    color: #f6c085;
+}
+
+.link-group ul {
+    list-style: none;
+    font-size: 0.9rem;
+}
+
+.link-group li {
+    margin-bottom: 10px;
+}
+
+.link-group a:hover {
+    color: #f6c085;
+}
+
+.copyright {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #777;
+    padding-top: 20px;
+}
+
+#drink, #concept, #food, #access  {
+    scroll-margin-top: 80px; /* ヘッダーの高さに合わせて数字を調整してください */
+}
