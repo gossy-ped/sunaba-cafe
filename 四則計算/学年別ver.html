@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>学年別・算数プリントメーカー（20問版）</title>
+    <style>
+        /* --- 画面表示用スタイル --- */
+        body { font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; background: #eef2f7; padding: 20px; margin: 0; }
+        .controls { background: white; padding: 25px; border-radius: 12px; max-width: 700px; margin: 0 auto 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .controls h2 { margin-top: 0; color: #0056b3; border-bottom: 3px solid #0056b3; padding-bottom: 8px; }
+        .setting-group { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .setting-label { font-weight: bold; display: block; margin-bottom: 10px; color: #333; }
+        
+        .grade-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
+        .grade-btn { padding: 10px; border: 2px solid #ddd; border-radius: 6px; background: #f8f9fa; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .grade-btn.active { border-color: #007bff; background: #e7f1ff; color: #007bff; font-weight: bold; }
+        
+        .config-summary { background: #fdfdfe; border: 1px dashed #ccc; padding: 10px; border-radius: 6px; font-size: 13px; color: #666; margin-top: 10px; }
+        
+        #serifList { width: 100%; box-sizing: border-box; height: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;}
+        #imgPreviewContainer { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .preview-thumb { width: 50px; height: 50px; object-fit: cover; border: 1px solid #ddd; }
+
+        .btn-generate { background: #28a745; color: white; border: none; padding: 15px; border-radius: 6px; cursor: pointer; font-size: 18px; font-weight: bold; width: 100%; box-shadow: 0 4px 0 #1e7e34; }
+        .btn-generate:active { transform: translateY(2px); box-shadow: none; }
+
+        /* --- プリント用スタイル --- */
+        .print-page { background: white; width: 210mm; height: 297mm; padding: 15mm; margin: 0 auto 20mm; box-sizing: border-box; position: relative; page-break-after: always; display: none; }
+        .print-header { border-bottom: 2px solid #000; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 5px; }
+        .title { font-size: 22px; font-weight: bold; }
+        .name-box { border: 1px solid #000; width: 200px; height: 45px; display: flex; align-items: center; padding-left: 10px; }
+        
+        /* 20問用に2列グリッドを調整 */
+        .problems-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 40px; }
+        .problem { font-size: 24px; display: flex; align-items: center; white-space: nowrap; height: 50px; }
+        .problem-num { font-size: 14px; margin-right: 10px; width: 25px; color: #666; text-align: right; }
+        .ans-line { border-bottom: 1.5px solid #000; width: 80px; height: 30px; margin-left: 8px; }
+        .answer-text { color: red; font-weight: bold; margin-left: 8px; display: none; }
+
+        /* キャラクターエリア */
+        .chara-container { position: absolute; bottom: 10mm; right: 15mm; width: 250px; display: none; align-items: flex-end; justify-content: flex-end; }
+        .speech-bubble { position: relative; background: #fff; border: 1.5px solid #333; border-radius: 12px; padding: 8px 12px; margin-right: 10px; margin-bottom: 10px; max-width: 150px; font-size: 13px; z-index: 10; }
+        .speech-bubble:after { content: ''; position: absolute; right: -14px; bottom: 6px; border-style: solid; border-width: 6px 0 6px 14px; border-color: transparent transparent transparent #333; }
+        .chara-image { max-width: 60px; max-height: 70px; object-fit: contain; }
+
+        @media print {
+            .controls { display: none !important; }
+            .print-page { display: block !important; margin: 0; border: none; }
+            .answer-page .answer-text { display: inline; }
+            .answer-page .ans-line { display: none; }
+            .answer-page .chara-container { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <h2>こども学習プリントメーカー（20問版）</h2>
+    
+    <div class="setting-group">
+        <span class="setting-label">1. 学年を選択</span>
+        <div class="grade-buttons">
+            <button class="grade-btn active" onclick="setGrade(1)">小学1年生</button>
+            <button class="grade-btn" onclick="setGrade(2)">小学2年生</button>
+            <button class="grade-btn" onclick="setGrade(3)">小学3年生</button>
+            <button class="grade-btn" onclick="setGrade(4)">小学4年生</button>
+            <button class="grade-btn" onclick="setGrade(5)">小学5年生</button>
+            <button class="grade-btn" onclick="setGrade(6)">小学6年生</button>
+        </div>
+        <div id="gradeSummary" class="config-summary">【1年生】20までの足し算・引き算が中心です。</div>
+    </div>
+
+    <div class="setting-group">
+        <span class="setting-label">2. キャラ画像と応援セリフ</span>
+        <input type="file" id="imageInput" accept="image/*" multiple onchange="previewImages()">
+        <div id="imgPreviewContainer"></div>
+        <textarea id="serifList" style="margin-top:10px;" placeholder="よくできたね！&#13;&#10;そのちょうし！"></textarea>
+    </div>
+    
+    <button class="btn-generate" onclick="generatePrint()">20問プリントを作成</button>
+</div>
+
+<div id="probPage" class="print-page">
+    <div class="print-header">
+        <div class="title" id="printTitle">小学1年生 さんすうプリント</div>
+        <div class="name-box">なまえ：</div>
+    </div>
+    <div id="probGrid" class="problems-grid"></div>
+    <div id="charaArea" class="chara-container">
+        <div id="speechBubble" class="speech-bubble"></div>
+        <img id="charaImg" src="" class="chara-image">
+    </div>
+</div>
+
+<div id="ansPage" class="print-page answer-page">
+    <div class="print-header"><div class="title">こたえ（20問）</div></div>
+    <div id="ansGrid" class="problems-grid"></div>
+</div>
+
+<script>
+    const gradeConfigs = {
+        1: { label: "1年生", ops: ["+", "-"], digits: 1, minAns: 0, maxAns: 20, numCount: 2, note: "20までの足し算・引き算" },
+        2: { label: "2年生", ops: ["+", "-", "*"], digits: 2, minAns: 0, maxAns: 100, numCount: 2, note: "2桁の筆算・九九" },
+        3: { label: "3年生", ops: ["+", "-", "*", "/"], digits: 3, minAns: 0, maxAns: 1000, numCount: 2, note: "3桁加減・わり算導入" },
+        4: { label: "4年生", ops: ["+", "-", "*", "/"], digits: 3, minAns: 0, maxAns: 10000, numCount: 3, note: "大きな数・3つの数の混合" },
+        5: { label: "5年生", ops: ["*", "/"], digits: 2, minAns: 0, maxAns: 1000, numCount: 2, note: "小数の意識（整数で生成）" },
+        6: { label: "6年生", ops: ["+", "-", "*", "/"], digits: 3, minAns: 0, maxAns: 10000, numCount: 3, note: "総復習・複雑な計算" }
+    };
+
+    let currentGrade = 1;
+    let uploadedImages = [];
+
+    function setGrade(g) {
+        currentGrade = g;
+        document.querySelectorAll('.grade-btn').forEach((btn, i) => btn.classList.toggle('active', (i+1)===g));
+        document.getElementById('gradeSummary').innerText = `【${g}年生】${gradeConfigs[g].note}`;
+        document.getElementById('printTitle').innerText = `小学${g}年生 さんすうプリント`;
+    }
+
+    function previewImages() {
+        const fileInput = document.getElementById('imageInput');
+        const container = document.getElementById('imgPreviewContainer');
+        container.innerHTML = '';
+        uploadedImages = [];
+        if (fileInput.files) {
+            Array.from(fileInput.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-thumb';
+                    container.appendChild(img);
+                    uploadedImages.push(e.target.result);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+
+    function generatePrint() {
+        const config = gradeConfigs[currentGrade];
+        const serifs = document.getElementById('serifList').value.split('\n').filter(s => s.trim() !== '');
+        const probGrid = document.getElementById('probGrid');
+        const ansGrid = document.getElementById('ansGrid');
+        probGrid.innerHTML = ''; ansGrid.innerHTML = '';
+
+        const digitLimit = Math.pow(10, config.digits);
+
+        for (let i = 1; i <= 20; i++) { // 20問ループ
+            let valid = false;
+            let res = {};
+            let att = 0;
+
+            while (!valid && att < 50) {
+                att++;
+                let cur = Math.floor(Math.random() * (digitLimit - 1)) + 1;
+                let exp = cur.toString();
+                
+                for (let j = 1; j < config.numCount; j++) {
+                    let op = config.ops[Math.floor(Math.random() * config.ops.length)];
+                    let next = Math.floor(Math.random() * digitLimit);
+
+                    if (op === '+') cur += next;
+                    else if (op === '-') {
+                        if (cur < next) next = Math.floor(Math.random() * cur);
+                        cur -= next;
+                    } else if (op === '*') {
+                        if (currentGrade === 2) { 
+                            let k1 = Math.floor(Math.random() * 9) + 1;
+                            let k2 = Math.floor(Math.random() * 9) + 1;
+                            cur = k1 * k2; exp = k1.toString(); next = k2;
+                        } else { cur *= next; }
+                    } else if (op === '/') {
+                        next = Math.floor(Math.random() * 8) + 2;
+                        let ans = Math.floor(Math.random() * 10);
+                        exp = (next * ans).toString(); cur = ans;
+                    }
+                    let sym = op==='*'?'×':op==='/'?'÷':op;
+                    if (op !== '/') exp += ` ${sym} ${next}`;
+                }
+                if (cur >= config.minAns && cur <= config.maxAns) {
+                    res = { exp: exp, ans: cur };
+                    valid = true;
+                }
+            }
+            if(!valid) res = { exp: "1 + 1", ans: 2 };
+
+            probGrid.innerHTML += `<div class="problem"><span class="problem-num">${i}.</span>${res.exp} = <div class="ans-line"></div></div>`;
+            ansGrid.innerHTML += `<div class="problem"><span class="problem-num">${i}.</span>${res.exp} = <span class="answer-text">${res.ans}</span></div>`;
+        }
+
+        const charArea = document.getElementById('charaArea');
+        if (uploadedImages.length > 0 && serifs.length > 0) {
+            charArea.style.display = 'flex';
+            document.getElementById('charaImg').src = uploadedImages[Math.floor(Math.random() * uploadedImages.length)];
+            document.getElementById('speechBubble').innerText = serifs[Math.floor(Math.random() * serifs.length)];
+        }
+
+        document.getElementById('probPage').style.display = 'block';
+        document.getElementById('ansPage').style.display = 'block';
+        setTimeout(() => { window.print(); }, 300);
+    }
+</script>
+</body>
+</html>
