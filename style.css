@@ -41,6 +41,14 @@ a {
     transition: color 0.3s;
 }
 
+/* --- ハンバーガーメニューの基本設定（PCでは隠す） --- */
+#menu-btn-check {
+    display: none;
+}
+.menu-btn {
+    display: none; /* PCでは三本線を出さない */
+}
+
 /* =========================================
    PART 1
 ========================================== */
@@ -144,11 +152,11 @@ header {
 }
 
 /* 各スライドの表示タイミングを5秒ずつずらす */
-.img-slide-1 { background-image: url("img/shop.png"); animation-delay: 0s; }
-.img-slide-2 { background-image: url("img/dripping.png"); animation-delay: 5s; }
-.img-slide-3 { background-image: url("img/drinking.png"); animation-delay: 10s; }
-.img-slide-4 { background-image: url("img/coffee.png"); animation-delay: 15s; }
-.img-slide-5 { background-image: url("img/napolitan.png"); animation-delay: 20s; }
+.img-slide-1 { background-image: url('img/shop.png'); animation-delay: 0s; }
+.img-slide-2 { background-image: url('img/dripping.png'); animation-delay: 5s; }
+.img-slide-3 { background-image: url('img/drinking.png'); animation-delay: 10s; }
+.img-slide-4 { background-image: url('img/coffee.png'); animation-delay: 15s; }
+.img-slide-5 { background-image: url('img/napolitan.png'); animation-delay: 20s; }
 
 /* 25秒間のループの中で、5秒（20%）ずつ担当する設定 */
 @keyframes fadeAnime {
@@ -159,17 +167,6 @@ header {
     100% { opacity: 0; }  /* 残りの時間は隠れて順番を待つ */
 }
 
-/* =========================================
-   レスポンシブ対応（スマホ用の微調整）
-   ========================================= */
-@media (max-width: 768px) {
-    .top-slider {
-        height: 60vh; /* スマホでは少し高さを低くする */
-    }
-    .slide-text h2 {
-        font-size: 2rem; /* 文字を少し小さく */
-    }
-}
 /* コンセプト */
 .concept {
     padding-top: 180px; /* ヘッダー固定分の余白 */
@@ -476,6 +473,135 @@ header {
     padding-top: 20px;
 }
 
-#drink, #concept, #food, #access  {
+#part-1, #drink, #concept, #food, #access  {
     scroll-margin-top: 80px; /* ヘッダーの高さに合わせて数字を調整してください */
+}
+
+@media (max-width: 768px) {
+    .header-inner {
+        flex-direction: column; /* ロゴとメニューを上下に並べる */
+        height: auto;
+        padding: 10px 0;
+    }
+    .g-nav ul {
+        gap: 15px; /* メニューの間隔を少し狭くする */
+        margin-top: 10px;
+    }
+    .logo {
+        font-size: 1.4rem; /* ロゴを少し小さく */
+    }
+
+    .top-slider {
+        height: 60vh; /* スマホでは少し高さを低くする */
+    }
+    .slide-text h2 {
+        font-size: 2rem; /* 文字を少し小さく */
+    }
+
+    /* コンセプト部分を縦並びに */
+    .concept-flex {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    /* コンセプト・オーナー写真 */
+    .concept-flex {
+        flex-direction: column;
+    }
+
+    /* フードメニュー写真 */
+    .food-row, .food-row.reverse {
+        flex-direction: column;
+    }
+
+    .food-img {
+        width: 100%;
+        aspect-ratio: 4 / 3; /* ★高さを数字で決めず、比率で決める */
+        background-color: #eee;
+        background-size: cover;
+        background-position: center;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+
+    /* ドリンクメニューを縦並びに */
+    .menu-grid {
+        flex-direction: column;
+    }
+
+    .item-img {
+        width: 100%;
+        aspect-ratio: 4 / 3; /* ★高さを数字で決めず、比率で決める */
+        background-color: #eee;
+        background-size: cover;
+        background-position: center;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    /* アクセス部分を縦並びに */
+    .access-flex {
+        flex-direction: column;
+    }
+
+    .main-copy {
+        font-size: 1.8rem; /* PCより少し小さく */
+    }
+    .concept {
+        padding-top: 140px; /* 固定ヘッダーに被らないよう調整 */
+    }
+    .menu-title, .access-title {
+        font-size: 1.6rem;
+    }
+
+    /* 三本線ボタンのデザイン */
+    .menu-btn {
+        display: flex;
+        height: 60px;
+        width: 60px;
+        justify-content: center;
+        align-items: center;
+        z-index: 110;
+        cursor: pointer;
+    }
+    .menu-btn span, .menu-btn span:before, .menu-btn span:after {
+        content: '';
+        display: block;
+        height: 3px;
+        width: 25px;
+        border-radius: 3px;
+        background-color: #333; /* 三本線の色 */
+        position: absolute;
+        transition: all 0.5s;
+    }
+    .menu-btn span:before { bottom: 8px; }
+    .menu-btn span:after { top: 8px; }
+
+    /* メニューを画面外（右側）に隠しておく */
+    .g-nav {
+        position: fixed;
+        top: 0;
+        right: -100%; /* 画面の右側に完全に隠す */
+        width: 80%; /* メニューの幅 */
+        height: 100vh;
+        background-color: rgba(246, 192, 133, 0.95); /* オレンジの背景 */
+        z-index: 105;
+        transition: all 0.5s;
+        padding-top: 100px;
+    }
+    .g-nav ul {
+        flex-direction: column; /* 縦並び */
+        align-items: center;
+    }
+
+    /* ボタンが押された（チェックが入った）時の動き */
+    #menu-btn-check:checked ~ .g-nav {
+        right: 0; /* 画面内にスッと出てくる */
+    }
+    
+    /* ボタンが×印に変わるアニメーション */
+    #menu-btn-check:checked ~ .menu-btn span { background-color: rgba(255, 255, 255, 0); }
+    #menu-btn-check:checked ~ .menu-btn span::before { bottom: 0; transform: rotate(45deg); }
+    #menu-btn-check:checked ~ .menu-btn span::after { top: 0; transform: rotate(-45deg); }
 }
