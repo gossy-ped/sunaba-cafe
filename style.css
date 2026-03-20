@@ -477,6 +477,48 @@ header {
     scroll-margin-top: 80px; /* ヘッダーの高さに合わせて数字を調整してください */
 }
 
+/* クーポンのデザイン設定 */
+.coupon-container {
+  border: 2px dashed #8b4513;      /* 茶色の点線 */
+  padding: 30px 20px;
+  margin: 40px auto;
+  max-width: 500px;                /* 横幅が広がりすぎないように制限 */
+  background-color: #fdf5e6;       /* 柔らかいベージュ色 */
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.coupon-sub {
+  color: #8b4513;
+  font-weight: bold;
+  font-family: 'Noto Serif JP', serif;
+  margin-bottom: 15px;
+  letter-spacing: 0.1em;
+}
+
+.coupon-title {
+  margin: 15px 0;
+  color: #5d4037;
+  font-size: 1.6rem;
+  font-family: 'Noto Serif JP', serif;
+}
+
+.coupon-text {
+  font-size: 1rem;
+  color: #5d4037;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.coupon-footer {
+  font-size: 0.8rem;
+  color: #8b4513;
+  border-top: 1px solid #d2b48c;   /* 区切り線 */
+  padding-top: 15px;
+  line-height: 1.5;
+}
+
 @media (max-width: 768px) {
     .header-inner {
         flex-direction: column; /* ロゴとメニューを上下に並べる */
